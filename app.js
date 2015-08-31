@@ -4,11 +4,22 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var sqlite3 = require('sqlite3').verbose();
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
 
 var app = express();
+var server = require('http').createServer(app);
+var io = require('socket.io')(server);
+var db = new sqlite3.Database('chat.db');
+// db.run('DROP TABLE messages');
+db.run('CREATE TABLE messages (name TEXT, msg TEXT, date TEXT)', function(err) {
+  if (err !== null) {
+    console.log("Table already exists!");
+  } else {
+    console.log("Successfully created table!");
+  }
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -23,7 +34,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -56,5 +66,39 @@ app.use(function(err, req, res, next) {
   });
 });
 
+server.listen(8080, function() {
+  console.log('Listening on *:8080');
+});
+
+// store message info in database
+var storeMessage = function(message){
+  var stmt = db.prepare('INSERT INTO messages VALUES(?, ?, ?)');
+  stmt.run(message.name, message.msg, message.date);
+  stmt.finalize();
+};
+
+
+// socket io operations
+io.on('connection', function(client) {
+  client.on('join', function(nickname) { 
+    console.log(nickname + ' joined FSE chatroom');
+    client.nickname = nickname;
+    db.each('SELECT name, msg, date FROM messages', function (err, row) {
+      client.emit('chat message', row);
+    });
+  });
+  client.on('chat message', function(message) {
+    console.log('message: ' + message.msg + " date: " + message.date);
+    message.name = client.nickname;
+    client.broadcast.emit('chat message', message);
+    // client.emit('chat message', message.name + ":" + message.msg + " date: " + message.date);
+    client.emit('chat message', message);
+    storeMessage(message);
+  });
+  client.on('disconnect', function() {
+    var name = client.nickname;
+    console.log(name + " has left FSE chatroom");
+  });
+});
 
 module.exports = app;

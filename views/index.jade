@@ -1,5 +1,19 @@
-extends layout
+doctype html
+html
+  head
+    link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Open+Sans')
+    link(rel='stylesheet', href='/stylesheets/style.css') 
+    script(src='/socket.io/socket.io.js')   
+    script(src='//code.jquery.com/jquery-2.1.4.min.js')
+    title FSE Chatroom
+  body
+    h1 FSE Chat Room
+    div#list
+      ul#messages
+    form#chat_form
+      div#wrapper
+        textarea(rows="4", cols="110", maxlength=1000)#chat_input
+        div#button_background
+          button(value="POST")#send_button
+    script(src='/javascripts/socket.js')
 
-block content
-  h1= title
-  p Welcome to #{title}
