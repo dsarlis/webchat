@@ -91,7 +91,6 @@ io.on('connection', function(client) {
     console.log('message: ' + message.msg + " date: " + message.date);
     message.name = client.nickname;
     client.broadcast.emit('chat message', message);
-    // client.emit('chat message', message.name + ":" + message.msg + " date: " + message.date);
     client.emit('chat message', message);
     storeMessage(message);
   });
