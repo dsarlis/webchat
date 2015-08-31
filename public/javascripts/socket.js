@@ -28,7 +28,13 @@ $('#send_button').text("POST");
 
 server.on('connect', function(data) {
   $('#status').html('Connected to FSE chatroom');
-  nickname = prompt("What is your nickname?");
+  var flag = false;
+  while (!flag) {
+    nickname = prompt("Please enter your nickname:");
+    if (nickname !== null && nickname !== "") {
+      flag = true;
+    }
+  }
   server.emit('join', nickname);
 });
 
