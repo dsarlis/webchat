@@ -27,7 +27,6 @@ var dateFormat = function(date) {
 $('#send_button').text("POST");
 
 server.on('connect', function(data) {
-  $('#status').html('Connected to FSE chatroom');
   var flag = false;
   while (!flag) {
     nickname = prompt("Please enter your nickname:");
