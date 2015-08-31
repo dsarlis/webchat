@@ -14,9 +14,11 @@ var dateFormat = function(date) {
   if (hour > 12) {
     hour -= 12;
     hour = hour < 10 ? "0" + hour : hour;
-    date = day + "." + month + "." + year + " " + hour + ":" + minutes + " PM";
+    date = day + "." + month + "." + year + " " 
+      + hour + ":" + minutes + " PM";
   } else {
-    date = day + "." + month + "." + year + " " + hour + ":" + minutes + " AM";
+    date = day + "." + month + "." + year + " " 
+      + hour + ":" + minutes + " AM";
   }
 
   return date;
