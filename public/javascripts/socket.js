@@ -48,6 +48,5 @@ $('#chat_form').submit(function(){
   $('#chat_input').val('');
   var date = dateFormat(new Date());
   server.emit('chat message', {msg: msg, date: date});
-  $('#messages').animate({ scrollTop: $('#messages li:last-child').offset().top + 'px'}, 1);
   return false;
 });

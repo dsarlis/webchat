@@ -12,7 +12,6 @@ var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var db = new sqlite3.Database('chat.db');
-// db.run('DROP TABLE messages');
 db.run('CREATE TABLE messages (name TEXT, msg TEXT, date TEXT)', function(err) {
   if (err !== null) {
     console.log("Table already exists!");
