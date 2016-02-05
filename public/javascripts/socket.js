@@ -1,5 +1,25 @@
 var server = io.connect("http://localhost:8080");
 
+/*server.on('connect', function() {
+  var flag = false;
+  while (!flag) {
+    nickname = prompt("Please enter your nickname:");
+    if (nickname !== null && nickname !== "") {
+      flag = true;
+    }
+  }
+  // console.log("a user connected");
+  loginPage();
+  // server.emit('join', nickname);
+});*/
+
+server.on('chat message', function(msg) {
+  $('#messages').append(('<li><p id="name">' + msg.name +'</p><p id="date">' 
+    + msg.date + '</p><br><p id="msg">' + msg.msg +'</p></li>'));
+  $('#messages').animate({ scrollTop: $('#messages li:last-child').offset().top + 'px'}, 1);
+});
+
+
 var dateFormat = function(date) {
   var day = date.getDate();
   day = day < 10 ? "0" + day : day;
@@ -24,29 +44,44 @@ var dateFormat = function(date) {
   return date;
 }
 
-$('#send_button').text("POST");
+// $('#send_button').text("POST");
 
-server.on('connect', function(data) {
-  var flag = false;
-  while (!flag) {
-    nickname = prompt("Please enter your nickname:");
-    if (nickname !== null && nickname !== "") {
-      flag = true;
-    }
-  }
-  server.emit('join', nickname);
-});
+function loginPage() {
+  $('#login').show();
+  $('#logout').hide();
+  $('#chatroom').hide();
+  $('#nickname').val('');
+}
 
-server.on('chat message', function(msg) {
-  $('#messages').append(('<li><p id="name">' + msg.name +'</p><p id="date">' 
-    + msg.date + '</p><br><p id="msg">' + msg.msg +'</p></li>'));
-  $('#messages').animate({ scrollTop: $('#messages li:last-child').offset().top + 'px'}, 1);
-  });
+function chatPage() {
+  $('#login').hide();
+  $('#logout').show();
+  $('#chatroom').show();
+}
 
-$('#chat_form').submit(function(){
+function login() {
+  chatPage();
+  var nickname = $('#nickname').val();
+  $('#username').text("Hi, " + nickname + "!");
+  server.emit('join', $('#nickname').val());
+}
+
+function logout() {
+  loginPage();
+}
+
+
+function chatMessage() {
+  var msg = $('#chat_input').val();
+  $('#chat_input').val('');
+  var date = dateFormat(new Date());
+  server.emit('chat message', {msg: msg, date: date});
+}
+
+/*$('#chat_form').submit(function(){
   var msg = $('#chat_input').val();
   $('#chat_input').val('');
   var date = dateFormat(new Date());
   server.emit('chat message', {msg: msg, date: date});
   return false;
-});
+});*/

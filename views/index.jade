@@ -3,17 +3,26 @@ html
   head
     link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Open+Sans')
     link(rel='stylesheet', href='/stylesheets/style.css') 
-    script(src='/socket.io/socket.io.js')   
-    script(src='//code.jquery.com/jquery-2.1.4.min.js')
     title FSE Chatroom
   body
-    h1 FSE Chat Room
-    div#list
-      ul#messages
-    form#chat_form
-      div#wrapper
-        textarea(rows="4", cols="110", maxlength=1000)#chat_input
-        div#button_background
-          input(type="submit", value="POST")#send_button
+    <!--h1 FSE Chat Room-->
+    div#page
+      form(onsubmit='return false')#chat_form
+        #login
+          | Welcome to FSE Chat Room
+          br
+          input(type="text", placeholder="Write your name here", autocomplete="off")#nickname
+          input(type="submit", value="Enter!", onclick="login();")#logout_button
+        #logout
+          div#username
+          input(type="submit", value="Logout", onclick="logout();")
+        #chatroom
+          div#list
+            ul#messages
+          textarea(rows="4", cols="110", maxlength="1000")#chat_input
+          div#button_background
+            input(type="submit", value="POST", onclick="chatMessage();")#send_button
+    script(src='/socket.io/socket.io.js')   
+    script(src='/javascripts/jquery-2.1.4.min.js')
     script(src='/javascripts/socket.js')
 
