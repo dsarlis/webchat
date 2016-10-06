@@ -1,4 +1,4 @@
-var server = io.connect("http://localhost:8080");
+var server = io.connect();
 
 /*server.on('connect', function() {
   var flag = false;
